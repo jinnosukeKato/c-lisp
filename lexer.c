@@ -1,5 +1,39 @@
 #include "lisp.h"
 
+char *token_type_to_str(TokenType type) {
+  switch (type) {
+    case TOKEN_LPAREN:
+      return "TOKEN_LPAREN";
+    case TOKEN_RPAREN:
+      return "TOKEN_RPAREN";
+    case TOKEN_NUMBER:
+      return "TOKEN_NUMBER";
+    case TOKEN_SYMBOL:
+      return "TOKEN_SYMBOL";
+    case TOKEN_EOF:
+      return "TOKEN_EOF";
+    default:
+      return "UNKNOWN";
+  }
+}
+
+void expect(TokenType expect) {
+  if (current_token->type != expect) {
+    error("Expect token type: %s, but got %s", token_type_to_str(expect),
+          token_type_to_str(current_token->type));
+    return;  // never reached
+  }
+
+  current_token = current_token->next;
+}
+
+Token *consume_if_symbol() {
+  if (current_token->type != TOKEN_SYMBOL) return NULL;
+  Token *cur = current_token;
+  current_token = current_token->next;
+  return cur;
+}
+
 Token *new_token(TokenType type, Token *current) {
   Token *token = calloc(1, sizeof(Token));
   token->type = type;
