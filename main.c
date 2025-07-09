@@ -12,11 +12,9 @@ int pop(void) { return stack[--sp]; }
 char INPUT[] = "(add 5 5)";
 
 int main(void) {
-  int pos = 0;
-  Token *token;
+  Token *token = tokenize(INPUT);
 
-  while ((token = next_token(INPUT, &pos))->type != TOKEN_EOF) {
-    printf("pos: %d, ", pos);
+  while (token->type != TOKEN_EOF) {
     switch (token->type) {
       case TOKEN_LPAREN:
         printf("左括弧\n");
@@ -34,6 +32,8 @@ int main(void) {
       default:
         break;
     }
+
+    token = token->next;
   }
   return 0;
 }

@@ -1,39 +1,58 @@
 #include "lisp.h"
 
-Token *next_token(char *input, int *pos) {
-  while (input[*pos] == ' ') {
-    (*pos)++;  // 始めの空白を飛ばす
-  }
-
-  char ch = input[*pos];
+Token *new_token(TokenType type, Token *current) {
   Token *token = calloc(1, sizeof(Token));
+  token->type = type;
 
-  if (ch == '\0') {
-    token->type = TOKEN_EOF;
-  } else if (ch == '(') {
-    token->type = TOKEN_LPAREN;
-    (*pos)++;
-  } else if (ch == ')') {
-    token->type = TOKEN_RPAREN;
-    (*pos)++;
-  } else if (isdigit(ch)) {
-    // 数値
-    token->type = TOKEN_NUMBER;
-    token->value.number = 0;
-    while (isdigit(input[*pos])) {
-      token->value.number = token->value.number * 10 + (input[*pos] - '0');
-      (*pos)++;
-    }
-  } else {
-    // シンボル
-    token->type = TOKEN_SYMBOL;
-    int i = 0;
-    while (input[*pos] != ' ' && input[*pos] != '(' && input[*pos] != ')' &&
-           input[*pos] != '\0') {
-      token->value.symbol[i++] = input[(*pos)++];
-    }
-    token->value.symbol[i] = '\0';
-  }
+  current->next = token;  // 現在のトークンのケツに新しいトークンをつける
 
   return token;
+}
+
+Token *tokenize(char *input) {
+  char *p = input;
+  Token head;
+  head.next = NULL;
+  Token *cur = &head;  // 現在のトークン
+
+  while (*p) {
+    if (isspace(*p)) {
+      p++;
+      continue;
+    }
+
+    if (*p == '(') {
+      cur = new_token(TOKEN_LPAREN, cur);
+      p += 1;
+      continue;
+    }
+
+    if (*p == ')') {
+      cur = new_token(TOKEN_RPAREN, cur);
+      p += 1;
+      continue;
+    }
+
+    if (isdigit(*p)) {
+      cur = new_token(TOKEN_NUMBER, cur);
+      // strtolによってpが適切にインクリメントされる
+      cur->value.number = strtol(p, &p, 10);
+      continue;
+    }
+
+    if (isalpha(*p)) {
+      cur = new_token(TOKEN_SYMBOL, cur);
+      int i = 0;
+      while (isalnum(*p) && i < 31) {
+        cur->value.symbol[i] = *p;
+        i++;
+        p++;
+      }
+      cur->value.symbol[i] = '\0';
+      continue;
+    }
+  }
+
+  new_token(TOKEN_EOF, cur);
+  return head.next;  // headの次を返すことでheadを無視
 }
