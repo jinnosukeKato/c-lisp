@@ -1,3 +1,6 @@
+#include <ctype.h>
+#include <stdlib.h>
+
 // lexer
 enum TokenType {
   TOKEN_LPAREN,  // (
@@ -17,4 +20,4 @@ struct Token {
 };
 typedef struct Token Token;
 
-Token next_token(char *input, int *pos);
+Token *next_token(char *input, int *pos);

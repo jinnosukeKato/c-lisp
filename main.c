@@ -13,11 +13,11 @@ char INPUT[] = "(add 5 5)";
 
 int main(void) {
   int pos = 0;
-  Token token;
+  Token *token;
 
-  while ((token = next_token(INPUT, &pos)).type != TOKEN_EOF) {
+  while ((token = next_token(INPUT, &pos))->type != TOKEN_EOF) {
     printf("pos: %d, ", pos);
-    switch (token.type) {
+    switch (token->type) {
       case TOKEN_LPAREN:
         printf("左括弧\n");
         break;
@@ -25,10 +25,10 @@ int main(void) {
         printf("右括弧\n");
         break;
       case TOKEN_NUMBER:
-        printf("数値 %d\n", token.value.number);
+        printf("数値 %d\n", token->value.number);
         break;
       case TOKEN_SYMBOL:
-        printf("シンボル %s\n", token.value.symbol);
+        printf("シンボル %s\n", token->value.symbol);
         break;
 
       default:
