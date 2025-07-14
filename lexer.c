@@ -27,6 +27,17 @@ void expect(TokenType expect) {
   current_token = current_token->next;
 }
 
+int expect_number() {
+  if (current_token->type != TOKEN_NUMBER) {
+    error("Expect number, but got %s", token_type_to_str(current_token->type));
+  }
+
+  int val = current_token->value.number;
+  current_token = current_token->next;
+
+  return val;
+}
+
 Token *consume_if_symbol() {
   if (current_token->type != TOKEN_SYMBOL) return NULL;
   Token *cur = current_token;

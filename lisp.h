@@ -61,6 +61,11 @@ char *token_type_to_str(TokenType type);
 void expect(TokenType expect);
 
 /// @brief
+/// トークンが数値ならその数値を返しトークンを1つ読み進める，そうでなければエラーを報告してexit(1)する．
+/// @return トークンのもつ値
+int expect_number();
+
+/// @brief
 /// 現在のトークンがsymbolであれば1つ読み進め，与えられたトークンそのものを返す．
 /// そうでなければ読み進めないでNULLを返す．
 /// @return 与えられたトークン
@@ -71,6 +76,7 @@ typedef enum NodeType NodeType;
 enum NodeType {
   NODE_NUMBER,
   NODE_SYMBOL,
+  NODE_LIST,
 };
 
 typedef struct Node Node;
@@ -79,9 +85,24 @@ struct Node {
   union {
     int number;       // NODE_NUMBER用
     char symbol[32];  // NODE_SYMBOL用
+    struct {
+      struct Node **elements;  // 子ノードリスト
+      int len;                 // 子ノードリストの長さ
+    } list;                    // NODE_LIST用 子ノードリスト情報
+
   } value;
 };
 
-/// @brief 与えられたトークンリストをパースする．
-/// @param token
-void parse(Token *token);
+/// @brief 与えられた数値を持つ数字ノードを作成して返す．
+/// @param num ノードの持つ数値
+/// @return 与えられた数値を持つ数字ノード
+Node *new_node_number(int num);
+
+/// @brief Nodeのリストに要素を追加する関数．
+/// @param list 要素を追加するノード
+/// @param elem 追加する要素のノード
+void node_list_add(Node *list, Node *elem);
+
+/// @brief 与えられたトークンリストをパースし，最上位のノードを返す．
+/// @param token パース対象のトークン
+Node *parse(Token *token);
