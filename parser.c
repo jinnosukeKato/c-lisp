@@ -53,6 +53,7 @@ Cons *parse_cons() {
 
     case TOKEN_LPAREN:
       car = new_node_cons(parse_cons());
+      expect(TOKEN_RPAREN);
       break;
     case TOKEN_RPAREN:
       consume(TOKEN_RPAREN);
@@ -74,9 +75,9 @@ Cons *parse_cons() {
 
     case TOKEN_LPAREN:
       cdr = new_node_cons(parse_cons());
+      expect(TOKEN_RPAREN);
       break;
 
-    case TOKEN_RPAREN:
     case TOKEN_EOF:
       cdr = new_node_nil();
       break;
