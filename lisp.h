@@ -71,25 +71,35 @@ int expect_number();
 /// @return 与えられたトークン
 Token *consume_if_symbol();
 
+/// @brief
+/// 現在のトークンの種類が引数と一致すれば1つ読み進め，真を返す．そうでなければ何もせず偽を返す．
+/// @param type 比較するトークンの種類
+/// @return 現在のトークンの種類が引数と一致するか否か
+bool consume(TokenType type);
+
 // parser
+typedef struct Cons Cons;
+typedef struct Node Node;
+
+struct Cons {
+  Node *car;
+  Node *cdr;
+};
+
 typedef enum NodeType NodeType;
 enum NodeType {
   NODE_NUMBER,
   NODE_SYMBOL,
-  NODE_LIST,
+  NODE_CONS,
+  NODE_NIL,
 };
 
-typedef struct Node Node;
 struct Node {
   NodeType type;
   union {
     int number;       // NODE_NUMBER用
     char symbol[32];  // NODE_SYMBOL用
-    struct {
-      struct Node **elements;  // 子ノードリスト
-      int len;                 // 子ノードリストの長さ
-    } list;                    // NODE_LIST用 子ノードリスト情報
-
+    Cons *cons;       // NODE_CONS用
   } value;
 };
 
@@ -98,11 +108,26 @@ struct Node {
 /// @return 与えられた数値を持つ数字ノード
 Node *new_node_number(int num);
 
-/// @brief Nodeのリストに要素を追加する関数．
-/// @param list 要素を追加するノード
-/// @param elem 追加する要素のノード
-void node_list_add(Node *list, Node *elem);
+/// @brief 与えられたシンボルを持つシンボルノードを作成して返す．
+/// @param symbol ノードの持つシンボル
+/// @return 与えられたシンボルを持つシンボルノード
+Node *new_node_symbol(char *symbol);
 
-/// @brief 与えられたトークンリストをパースし，最上位のノードを返す．
+/// @brief 与えられたCons *を持つノードを作成して返す．
+/// @param next 次につなげるConsのポインタ
+/// @return 与えられたCons *を持つノード
+Node *new_node_cons(Cons *next);
+
+/// @brief Nilノードを作成して返す．
+/// @return Nilノード
+Node *new_node_nil();
+
+/// @brief 与えられたcarとcdrを持つconsを作成して返す
+/// @param car car
+/// @param cdr cdr
+/// @return 与えられたcarとcdrを持つcons
+Cons *new_cons(Node *car, Node *cdr);
+
+/// @brief 与えられたトークンリストをパースし，先頭のConsを返す．
 /// @param token パース対象のトークン
-Node *parse(Token *token);
+Cons *parse(Token *token);

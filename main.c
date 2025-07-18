@@ -9,27 +9,36 @@ void push(int i) { stack[sp++] = i; }
 
 int pop(void) { return stack[--sp]; }
 
-char INPUT[] = "(add 5 5)";
+char INPUT[] = "(add (5 5))";
 
 int main(void) {
+  printf("input: %s\n", INPUT);
   Token *token = tokenize(INPUT);
-  Node *node = parse(token);
+  Cons *head = parse(token);
 
   // パース結果を出力
-  if (node->type == NODE_LIST && node->value.list.len > 0) {
-    for (int i = 0; i < node->value.list.len; i++) {
-      switch (node->value.list.elements[i]->type) {
-        case NODE_SYMBOL:
-          printf("%s\n", node->value.list.elements[i]->value.symbol);
-          break;
+  Cons *cur = head;
+  while (cur) {
+    // carの内容を表示
+    if (cur->car->type == NODE_SYMBOL) {
+      printf("symbol: %s\n", cur->car->value.symbol);
+    } else if (cur->car->type == NODE_NUMBER) {
+      printf("number: %d\n", cur->car->value.number);
+    }
 
-        case NODE_NUMBER:
-          printf("%d\n", node->value.list.elements[i]->value.number);
-          break;
-
-        default:
-          break;
+    // cdrをチェックして次に進む
+    if (cur->cdr->type == NODE_NIL) {
+      break;
+    } else if (cur->cdr->type == NODE_CONS) {
+      cur = cur->cdr->value.cons;
+    } else {
+      // cdrが数値やシンボルの場合も表示
+      if (cur->cdr->type == NODE_SYMBOL) {
+        printf("symbol: %s\n", cur->cdr->value.symbol);
+      } else if (cur->cdr->type == NODE_NUMBER) {
+        printf("number: %d\n", cur->cdr->value.number);
       }
+      break;
     }
   }
   printf("parse complete\n");

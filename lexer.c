@@ -45,6 +45,15 @@ Token *consume_if_symbol() {
   return cur;
 }
 
+bool consume(TokenType type) {
+  if (current_token->type == type) {
+    current_token = current_token->next;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Token *new_token(TokenType type, Token *current) {
   Token *token = calloc(1, sizeof(Token));
   token->type = type;
