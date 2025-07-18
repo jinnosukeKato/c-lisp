@@ -40,33 +40,51 @@ Cons *parse_cons() {
   Node *car;
   expect(TOKEN_LPAREN);
 
-  if (current_token->type == TOKEN_SYMBOL) {
-    car = new_node_symbol(current_token->value.symbol);
-    consume(TOKEN_SYMBOL);
-  } else if (current_token->type == TOKEN_NUMBER) {
-    car = new_node_number(current_token->value.number);
-    consume(TOKEN_NUMBER);
-  } else if (current_token->type == TOKEN_LPAREN) {
-    car = new_node_cons(parse_cons());
-  } else if (consume(TOKEN_RPAREN)) {
-    car = new_node_nil();
-  } else {
-    printf("\n-- parse error car. got %s --\n",
-           token_type_to_str(current_token->type));
+  switch (current_token->type) {
+    case TOKEN_SYMBOL:
+      car = new_node_symbol(current_token->value.symbol);
+      consume(TOKEN_SYMBOL);
+      break;
+
+    case TOKEN_NUMBER:
+      car = new_node_number(current_token->value.number);
+      consume(TOKEN_NUMBER);
+      break;
+
+    case TOKEN_LPAREN:
+      car = new_node_cons(parse_cons());
+      break;
+    case TOKEN_RPAREN:
+      consume(TOKEN_RPAREN);
+      car = new_node_nil();
+      break;
+
+    default:
+      printf("\n-- parse error car. got %s --\n",
+             token_type_to_str(current_token->type));
+      break;
   }
 
-  // todo: cdrの実装間違ってる ケツに必ずnilが来るようにしないといけない
   Node *cdr;
-  if (current_token->type == TOKEN_NUMBER) {
-    cdr = new_node_number(current_token->value.number);
-    consume(TOKEN_NUMBER);
-  } else if (current_token->type == TOKEN_LPAREN) {
-    cdr = new_node_cons(parse_cons());
-  } else if (consume(TOKEN_RPAREN) || consume(TOKEN_EOF)) {
-    cdr = new_node_nil();
-  } else {
-    printf("\n-- parse error cdr. got %s --\n",
-           token_type_to_str(current_token->type));
+  switch (current_token->type) {
+    case TOKEN_NUMBER:
+      cdr = new_node_number(current_token->value.number);
+      consume(TOKEN_NUMBER);
+      break;
+
+    case TOKEN_LPAREN:
+      cdr = new_node_cons(parse_cons());
+      break;
+
+    case TOKEN_RPAREN:
+    case TOKEN_EOF:
+      cdr = new_node_nil();
+      break;
+
+    default:
+      printf("\n-- parse error cdr. got %s --\n",
+             token_type_to_str(current_token->type));
+      break;
   }
 
   Cons *cons = calloc(1, sizeof(Cons));
