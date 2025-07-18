@@ -131,3 +131,13 @@ Cons *new_cons(Node *car, Node *cdr);
 /// @brief 与えられたトークンリストをパースし，先頭のConsを返す．
 /// @param token パース対象のトークン
 Cons *parse(Token *token);
+
+// code generator
+
+/// @brief 与えられたノードを再帰的にprintする
+/// @param node 対象のノード
+void print_node(Node *node);
+
+/// @brief 与えられたConsセルを再帰的にprintする
+/// @param head 対象のConsセル
+void print_cons(Cons *head);
