@@ -9,7 +9,8 @@ void push(int i) { stack[sp++] = i; }
 
 int pop(void) { return stack[--sp]; }
 
-char INPUT[] = "(add (5 5))";
+// char INPUT[] = "(add (5 5))";
+char INPUT[] = "(add((add (2 3)) 5))";
 
 int main(void) {
   printf("input: %s\n", INPUT);
