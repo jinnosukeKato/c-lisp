@@ -96,6 +96,5 @@ Cons *parse_cons() {
 
 Cons *parse(Token *token) {
   current_token = token;
-  printf("parse start\n");
   return parse_cons();
 }

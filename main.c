@@ -1,20 +1,16 @@
-#include <stdio.h>
-
 #include "lisp.h"
 
-int stack[100] = {0};
-int sp = 0;
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    error("illegal arguments number\n");
+    return 1;
+  }
 
-void push(int i) { stack[sp++] = i; }
+  printf("tokenize start\n");
+  Token *token = tokenize(argv[1]);
+  printf("tokenize complete\n");
 
-int pop(void) { return stack[--sp]; }
-
-// char INPUT[] = "(add (5 5))";
-char INPUT[] = "(add((add (2 3)) 5))";
-
-int main(void) {
-  printf("input: %s\n", INPUT);
-  Token *token = tokenize(INPUT);
+  printf("parse start\n");
   Cons *head = parse(token);
   printf("parse complete\n");
 
