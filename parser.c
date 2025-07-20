@@ -53,11 +53,6 @@ Cons *parse_cons() {
 
     case TOKEN_LPAREN:
       car = new_node_cons(parse_cons());
-      expect(TOKEN_RPAREN);
-      break;
-    case TOKEN_RPAREN:
-      consume(TOKEN_RPAREN);
-      car = new_node_nil();
       break;
 
     default:
@@ -75,11 +70,6 @@ Cons *parse_cons() {
 
     case TOKEN_LPAREN:
       cdr = new_node_cons(parse_cons());
-      expect(TOKEN_RPAREN);
-      break;
-
-    case TOKEN_EOF:
-      cdr = new_node_nil();
       break;
 
     default:
@@ -87,6 +77,8 @@ Cons *parse_cons() {
              token_type_to_str(current_token->type));
       break;
   }
+
+  expect(TOKEN_RPAREN);
 
   Cons *cons = calloc(1, sizeof(Cons));
   cons->car = car;
