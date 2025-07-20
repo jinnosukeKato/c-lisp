@@ -48,3 +48,42 @@ void print_cons(Cons *head) {
     }
   }
 }
+
+void push_i(int immediate) { printf("  push %d\n", immediate); }
+
+void push(char *source) {
+  printf("  push %s\n", source);
+}
+
+void pop(char *destination) { printf("  pop %s\n", destination); }
+
+void gen_node(Node *node) {
+  switch (node->type) {
+    case NODE_NUMBER:
+      push_i(node->value.number);
+      return;
+
+    case NODE_SYMBOL:
+      if (strcmp("add", node->value.symbol) == 0) {
+        printf("# add\n");
+        pop("rdi");
+        pop("rax");
+        printf("  add rax, rdi\n");
+        push("rax");
+      }
+      break;
+    case NODE_CONS:
+      gen_cons(node->value.cons);
+      break;
+
+    default:
+      break;
+  }
+}
+
+void gen_cons(Cons *head) {
+  Cons *cur = head;
+
+  gen_node(cur->cdr);
+  gen_node(cur->car);
+}

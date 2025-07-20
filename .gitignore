@@ -1,3 +1,5 @@
 lisp
 *.o
 .vscode/*
+*.elf
+*.s

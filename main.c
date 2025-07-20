@@ -6,16 +6,20 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  printf("tokenize start\n");
   Token *token = tokenize(argv[1]);
-  printf("tokenize complete\n");
 
-  printf("parse start\n");
   Cons *head = parse(token);
-  printf("parse complete\n");
 
   // パース結果を出力
-  print_cons(head);
+  // プロローグ
+  printf(".intel_syntax noprefix\n");
+  printf(".globl main\n");
+  printf("main:\n");
+  gen_cons(head);
+  // エピローグ
+  printf("# return\n");
+  pop("rax");
+  printf("  ret\n");
 
   return 0;
 }

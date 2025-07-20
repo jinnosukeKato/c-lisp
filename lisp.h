@@ -141,3 +141,23 @@ void print_node(Node *node);
 /// @brief 与えられたConsセルを再帰的にprintする
 /// @param head 対象のConsセル
 void print_cons(Cons *head);
+
+/// @brief 即値をスタックにpushする
+/// @param immediate 即値
+void push_i(int immediate);
+
+/// @brief スタックに指定されたレジスタをpushする
+/// @param source 指定されたレジスタ
+void push(char *source);
+
+/// @brief スタックトップからpopする
+/// @param destination 格納先のレジスタ名
+void pop(char *destination);
+
+/// @brief ノードのアセンブリを再帰的に吐く
+/// @param node 対象のノード
+void gen_node(Node *node);
+
+/// @brief Consのアセンブリを再帰的に吐く
+/// @param head 対象のCons
+void gen_cons(Cons *head);
