@@ -51,9 +51,7 @@ void print_cons(Cons *head) {
 
 void push_i(int immediate) { printf("  push %d\n", immediate); }
 
-void push(char *source) {
-  printf("  push %s\n", source);
-}
+void push(char *source) { printf("  push %s\n", source); }
 
 void pop(char *destination) { printf("  pop %s\n", destination); }
 
