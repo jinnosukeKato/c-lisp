@@ -8,7 +8,7 @@ lisp: $(OBJS)
 $(OBJS): lisp.h
 
 tmp.s: lisp
-				./lisp "(add (5 5))" > tmp.s
+				./lisp "(add ((add(5 5)) 2))" > tmp.s
 
 tmp.elf: compile
 				$(CC) tmp.s -o tmp.elf
