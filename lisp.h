@@ -122,6 +122,11 @@ Node *new_node_cons(Cons *next);
 /// @return Nilノード
 Node *new_node_nil();
 
+/// @brief 連結リストの最後のノード(carに値,cdrにnilを持つノード)を生成する．
+/// @param type 最後のノードのcarの種類
+/// @return 生成したノード
+Node *new_node_tail(NodeType type);
+
 /// @brief 与えられたcarとcdrを持つconsを作成して返す
 /// @param car car
 /// @param cdr cdr

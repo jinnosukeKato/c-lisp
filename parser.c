@@ -27,6 +27,14 @@ Node *new_node_nil() {
   return node;
 }
 
+Node *new_node_tail(NodeType type) {
+  Node *car = calloc(1, sizeof(Node));
+  car->type = type;
+
+  Cons *cons = new_cons(car, new_node_nil());
+  return new_node_cons(cons);
+}
+
 Cons *new_cons(Node *car, Node *cdr) {
   Cons *cons = calloc(1, sizeof(Cons));
   cons->car = car;
@@ -64,7 +72,10 @@ Cons *parse_cons() {
   Node *cdr;
   switch (current_token->type) {
     case TOKEN_NUMBER:
-      cdr = new_node_number(current_token->value.number);
+      cdr = new_node_tail(NODE_NUMBER);
+      // かなり力技的実装
+      // carをパースしても残っているトークンを処理すればいいだけなのでもっといい実装できそう
+      cdr->value.cons->car->value.number = current_token->value.number;
       consume(TOKEN_NUMBER);
       break;
 
